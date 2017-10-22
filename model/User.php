@@ -281,6 +281,42 @@
 			}
 		}
 		
+		public static function firstAcess($oUser)
+		{
+			self::researchUserExist($oUser);
+			try
+			{
+				$sUserName = new Sessao();
+				$aJson = CommonFunctions::readJSON("database/.config.json");
+				$rDatabaseHandler = new SerDatabaseHandler($aJson);
+				$rConnection = $rDatabaseHandler->getInstance();
+				$rDatabaseHandler->begin($rConnection);
+				$sQuery = "INSERT INTO usuario(cpfusuario,
+											   nomeusuario,
+											   senhausuario,
+											   tipousuario,
+											   dataInclusaousuario,
+											   emailusuario) 
+						   VALUES (?,?,?,?,?,?) ";
+				$aArrayParam = [$oUser->getCpf(),$oUser->getUserName(),
+								md5($oUser->getPassword()),$oUser->getUserType(),
+								$oUser->getDateInclusion(),$oUser->getEmail()];				
+				$rDatabaseHandler->add($sQuery,$rConnection,$aArrayParam);
+				$rDatabaseHandler->commit($rConnection);
+				$rConnection = $rDatabaseHandler->close($rConnection);
+				self::sendEmail($oUser->getEmail(),$sUserName->getSessao("sUserName"),"Cadastro de Usuario","Olá !!! Você acaba de ser cadastrado no SER (Sistema de Engenharia de Requisitos) e estamos muito felizes de você ser mais um usuario do nosso sistema. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
+				echo "<script> 
+			    			alert('Cadastro Feito Com Sucesso !!!');
+							window.location.href = '/ser/login/pageacess';
+					 </script>";
+			}
+			catch(PDOException $e)
+			{
+				$rDatabaseHandler->roolBack($rConnection);
+				echo "Erro ao Cadastrar: ".$e->getMessage();
+			}
+		}
+		
 		public static function updateUser($oUser)
 		{
 			$iEdit = new Sessao();

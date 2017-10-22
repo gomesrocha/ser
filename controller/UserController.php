@@ -40,7 +40,7 @@
 				$oUser = new User($this->post("sUserCpf"),$this->post("sUserName"),$this->post("sUserEmail"),
 									$this->post("sUserType"),$this->post("sUserPassword"));
 			
-				User::addUser($oUser);
+				User::firstAcess($oUser);
 			}
 			else
 			{
