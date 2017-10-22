@@ -9,7 +9,7 @@
 		}
 		
 		public function addUser()
-		{
+		{	
 			if( !empty($this->post("sUserName")) && !empty($this->post("sUserType")) && !empty($this->post("sUserCpf"))
 				 && !empty($this->post("sUserEmail")) && !empty($this->post("sUserPassword")) )
 			{
@@ -23,6 +23,30 @@
 				echo "<script> 
 						alert('Dados Devem Ser Preenchidos !!!');
 						window.location.href = '/ser/login/pageadduser';
+			     </script>";
+			}
+		}
+		
+		public function firstAcess()
+		{
+			if($this->post("btnVoltar"))
+			{
+				$this->redirect("pagelogin");
+			}
+			
+			if( !empty($this->post("sUserName")) && !empty($this->post("sUserType")) && !empty($this->post("sUserCpf"))
+				 && !empty($this->post("sUserEmail")) && !empty($this->post("sUserPassword")) )
+			{
+				$oUser = new User($this->post("sUserCpf"),$this->post("sUserName"),$this->post("sUserEmail"),
+									$this->post("sUserType"),$this->post("sUserPassword"));
+			
+				User::addUser($oUser);
+			}
+			else
+			{
+				echo "<script> 
+						alert('Dados Devem Ser Preenchidos !!!');
+						window.location.href = '/ser/login/pageacess';
 			     </script>";
 			}
 		}

@@ -6,9 +6,10 @@
     <title></title>
     <link href="../css/Principal.css" rel="stylesheet" type="text/css" />
     <link href="../css/StyleSheet.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../js/Mascara.js"></script>
 </head>
 <body>
-    <form action="logged" method="POST">
+    <form action="/ser/user/firstacess" method="POST">
     <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -32,63 +33,94 @@
         <div class="row">
             
             <!-- /col-3 -->
-            <div class="col-sm-9">
+             <div class="col-sm-9">
                 <!-- column 2 -->
-              
+                <ul class="list-inline pull-right">
+                    <li><a href="#"><i class="glyphicon glyphicon-cog"></i></a></li>
+                </ul>
+                <a href="#"><strong><i class="glyphicon glyphicon-dashboard"></i>Primeiro Acesso</strong></a>
+                <hr />
                 <div class="row">
-                    <div class="col-md-12" style= "margin-left: 480px; width: 500px">
+                    <div class="col-md-12" style= "margin-left: 0px">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <div class="panel-title">
                                     <i class="glyphicon glyphicon-wrench pull-right"></i>
                                     <h4 id="head_pagina">
-                                        LOGIN</h4>
+                                        Cadastrar Usuario</h4>
                                 </div>
                             </div>
                             <div class="panel-body">
-                                <div class="control-group col-md-10">
+                                <div class="control-group col-md-7">
+                                    <label>
+                                        Nome</label>
+                                    <div class="controls">
+										<input type="text" name ="sUserName" autocomplete = "off"  class="form-control"/>
+                                    </div>
+                                </div>
+								
+                                <div class="control-group col-md-6">
+                                    <label>
+                                        Tipo de Usuario</label>
+                                    <div class="controls">
+                                        <select name = "sUserType"  class="form-control">
+											
+											<option value="gerente">Gerente de Projeto</option>
+											<option value="keyUser">KeyUser</option>
+											<option value="stakeholder">Stakeholder</option>
+											<option value="analista">Analista</option>
+											<option value="desenvolvedor">Desenvolvedor</option>
+										</select>
+                                        <br />
+                                    </div>
+                                </div>
+                                 <div class="control-group col-md-4">
+                                    <label>
+                                        CPF</label>
+                                    <div class="controls">
+                                        <input type="text" name ="sUserCpf" autocomplete = "off" class="form-control" maxlength="14" id= "cpf" onKeyUp="formataCPF(cpf,event)" />
+                                        <br />
+                                    </div>
+                                </div>
+								</br>
+								<div class="control-group col-md-3">
                                     <label>
                                         Email</label>
                                     <div class="controls">
-										<input type="email" name ="sEmail" required=""  class="form-control"/>
-                                    </div>
-                                </div>
-                                <div class="control-group col-md-6">
-                                    <label>
-                                        Senha</label>
-                                    <div class="controls">
-                                        <input type="password" name ="sPassword" required="" autocomplete = "off" class="form-control"  MaxLength="10"  />
-                                        
+                                        <input type="email" name ="sUserEmail" autocomplete = "off" class="form-control" />
                                         <br />
                                     </div>
                                 </div>
 								
+								<div class="control-group col-md-3">
+                                    <label>
+                                        Senha</label>
+                                    <div class="controls">
+                                        <input type="password" name ="sUserPassword" autocomplete = "off" class="form-control" />
+                                        <br />
+                                    </div>
+                                </div>
 								
-								 <div class="control-group col-md-12">
-                                   <div class="controls">
-                                        <input type="submit" name = "btnLogin" class="btn btn-success" style = "margin-left: 132px;  " value="Acessar O Sistema"
-                                             /></br>
-									</div>
-                                    
-								</div>
-                                <div class="control-group col-md-12">
+								<div class="controls">
+                                        <div class="control-group col-md-12">
                                    
-                                    <div class="controls"></br>
-                                        <p><a href ="/ser/login/pagechangepassword" style = "margin-left: 143px"> Esqueceu a Senha ? </a></p>
-										 <p><a href ="/ser/login/pageacess" style = "margin-left: 150px"> Primeiro Acesso ? </a></p>
-									</div>
+											<div class="controls">
+												<input type="submit" name = "btnAdd" class="btn btn-success" value="Cadastrar"/>
+												<input type="submit" name = "btnVoltar" class="btn btn-primary" value="Voltar"/>
+											</div>
+										</div>
+                                </div>
 								</div>
+                            </div>
+                            <br />
+                            <br />
+                    
+							
+                            </div>
                             <!--/panel content-->
                         </div>
                         <!--/panel-->
                     </div>
-                    <!--/col-span-12-->
-                </div>
-                <!--/row-->
-                <hr />
-            </div>
-            <!--/col-span-9-->
-        </div>
     </div>
     <!-- /Main -->
     <footer class="text-center">Desenvolvido por <strong>Luis Antonio dos Santos Silva / GPITIC</strong>.</footer>

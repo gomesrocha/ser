@@ -54,6 +54,11 @@ abstract class AbstractController{
 		include 'view/Login.php';
 	}
 	
+	public function pageAcess()
+	{
+		include 'view/pageAcess.php';
+	}
+	
 	public function pageChangePassword()
 	{
 		include 'view/pageChangePassword.php';	
