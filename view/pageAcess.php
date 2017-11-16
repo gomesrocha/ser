@@ -29,11 +29,11 @@
     </div>
     <!-- /Header -->
     <!-- Main -->
-    <div class="container-fluid"  >
+    <div class="container-fluid"   >
         <div class="row">
             
             <!-- /col-3 -->
-             <div class="col-sm-9">
+             <div class="col-sm-9" style ="left: 200px ">
                 <!-- column 2 -->
                 <ul class="list-inline pull-right">
                     <li><a href="#"><i class="glyphicon glyphicon-cog"></i></a></li>
