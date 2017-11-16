@@ -306,7 +306,7 @@
 				$rDatabaseHandler->add($sQuery,$rConnection,$aArrayParam);
 				$rDatabaseHandler->commit($rConnection);
 				$rConnection = $rDatabaseHandler->close($rConnection);
-				self::sendEmail($oUser->getEmail(),$sUserName->getSessao("sUserName"),"Cadastro de Usuario","Olá !!! Você acaba de ser cadastrado no SER (Sistema de Engenharia de Requisitos) e estamos muito felizes de você ser mais um usuario do nosso sistema. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
+				self::sendEmail($oUser->getEmail(),$oUser->getUserName(),"Cadastro de Usuario","Olá !!! Você acaba de ser cadastrado no SER (Sistema de Engenharia de Requisitos) e estamos muito felizes de você ser mais um usuario do nosso sistema. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
 				echo "<script> 
 			    			alert('Cadastro Feito Com Sucesso !!!');
 							window.location.href = '/ser/login/pageacess';
