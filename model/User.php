@@ -958,13 +958,9 @@
 			// É necessário indicar que o formato do e-mail é html
 			$sHeaders  = 'MIME-Version: 1.0' . "\r\n";
 			$sHeaders .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n"."\r\n";
-			$headers = 'From: ser@midasprocesses.com' . "\r\n" .
-			'Reply-To: ser@midasprocesses.com' . "\r\n" .
-			'X-Mailer: PHP/' . phpversion();
 			$sHeaders .= 'Usuario:'.$sUserName."\r\n"."\r\n";
 			$sHeaders .= $sMsg; 
 			//$headers .= "Bcc: $EmailPadrao\r\n";
 			$sEnviarEmail = mail($sDestino, $sAssunto, $sHeaders);
-
 		}
 	}
