@@ -14,8 +14,7 @@
 			if( !empty($this->post("sRequirementName")) && !empty($this->post("sRequirementDateFinish"))
 				 && !empty($this->post("sDescriptionRequirement")) )
 			{	
-				$oRequirement = new Requirement($this->post("iRequirementTask"),$this->post("iRequirementProject"),
-												$this->post("iRequirementType"),$this->post("sRequirementName"),
+				$oRequirement = new Requirement($this->post("iRequirementProject"),$this->post("iRequirementType"),$this->post("sRequirementName"),
 												$this->post("sImportanceRequirement"),$this->post("sRequirementDateStart"),
 												$this->post("sRequirementDateFinish"),$this->post("sDescriptionRequirement"),$this->post("sRequirementSituation"));				
 				Requirement::addRequirement($oRequirement);	
@@ -75,8 +74,7 @@
 			if( !empty($this->post("sRequirementName")) && !empty($this->post("sRequirementDateFinish"))
 				 && !empty($this->post("sDescriptionRequirement")) )
 			{	
-				$oRequirement = new Requirement($this->post("iRequirementTask"),$this->post("iRequirementProject"),
-												$this->post("iRequirementType"),$this->post("sRequirementName"),
+				$oRequirement = new Requirement($this->post("iRequirementProject"),$this->post("iRequirementType"),$this->post("sRequirementName"),
 												$this->post("sImportanceRequirement"),$this->post("sRequirementDateStart"),
 												$this->post("sRequirementDateFinish"),$this->post("sDescriptionRequirement"),$this->post("sRequirementSituation"));				
 				Requirement::updateRequirement($oRequirement);	

@@ -85,7 +85,7 @@
                             <li><i class="glyphicon glyphicon-list-alt"></i> Requisitos</li>
 							
 								<ul>
-									<li><a href="/ser/login/pagereportnotapprovedrequirement"><i class="glyphicon glyphicon-print"></i> Aprovar Requisitos Por Projeto </a></li>
+									<li><a href="/ser/login/pagereportnotapprovedrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Em Avaliacao Por Projeto </a></li>
 									
 								</ul>
 						</ul>

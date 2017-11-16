@@ -104,7 +104,6 @@
 								<ul>
 									<li><a href="/ser/requirement/createallreportrequirement"><i class="glyphicon glyphicon-print"></i> Todos os Requisitos </a></li>
 									<li><a href="/ser/requirement/pagereportprojectrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Projeto </a></li>
-									<li><a href="/ser/requirement/pagereporttaskrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Tarefa </a></li>
 									<li><a href="/ser/requirement/pagereportrequirementtyperequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Tipo de Requisito </a></li>
 									<li><a href="/ser/requirement/pagereportstartdaterequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Data De Inicio </a></li>
 									<li><a href="/ser/requirement/pagereportfinishdaterequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Data De Fim </a></li>

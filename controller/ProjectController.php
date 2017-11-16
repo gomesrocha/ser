@@ -114,7 +114,7 @@
 				{
 					echo "<script> 
 						alert('Nenhum Requisito Aprovado no Projeto !!!');
-						window.location.href = '/ser/login/pagestakeholdervisualizeproject';
+						window.location.href = '/ser/login/pagevisualizeliftingmanager';
 					</script>";		
 				}
 				else

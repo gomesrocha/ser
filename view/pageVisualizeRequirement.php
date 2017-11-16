@@ -16,7 +16,6 @@
 		<?php
 			$aAllRequirement 		= Requirement::allRequirement();
 			$aAllTypeRequirement	= TypeRequirement::allTypeRequirement();
-			$aAllTask 				= Task::allTask();
 			$aAllProject 			= Project::allProject();
 		?>
      <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
@@ -102,7 +101,6 @@
 								<ul>
 									<li><a href="/ser/requirement/createallreportrequirement"><i class="glyphicon glyphicon-print"></i> Todos os Requisitos </a></li>
 									<li><a href="/ser/requirement/pagereportprojectrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Projeto </a></li>
-									<li><a href="/ser/requirement/pagereporttaskrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Tarefa </a></li>
 									<li><a href="/ser/requirement/pagereportrequirementtyperequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Tipo de Requisito </a></li>
 									<li><a href="/ser/requirement/pagereportstartdaterequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Data De Inicio </a></li>
 									<li><a href="/ser/requirement/pagereportfinishdaterequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Data De Fim </a></li>
@@ -162,7 +160,6 @@
 			<tr>			
 				<td  align="center">ID</td>
 				<td  align="center">Tipo</td>
-				<td  align="center">Tarefa </td>
 				<td  align="center">Projeto</td>
 				<td  align="center">Nome </td>
 				<td  align="center">Descricao</td>
@@ -180,14 +177,12 @@
 				    {
 						foreach ($aAllRequirement as $oRequirement) 
 						{
-							$oVisualizeTypeRequirement = TypeRequirement::findTypeRequirement($oRequirement['TipoRequisito_idTipoRequisito']);
-							$oVisualizeProject = Project::findProject($oRequirement['Projeto_idProjeto']);
-							$oVisualizeTask = Task::findTask($oRequirement['Tarefa_idTarefa']);
+							$oVisualizeTypeRequirement = TypeRequirement::findTypeRequirement($oRequirement['tipoRequisito_idTipoRequisito']);
+							$oVisualizeProject = Project::findProject($oRequirement['projeto_idProjeto']);
 				?>	
 							<tr>
 								<td align="center"> <?= $oRequirement['idRequisito'];?> </td>
 								<td align="center"> <?= $oVisualizeTypeRequirement['nomeTipoRequisito'];?> </td>
-								<td align="center"> <?= $oVisualizeTask['nomeTarefa'];?> </td>
 								<td align="center"> <?= $oVisualizeProject['nomeProjeto'];?> </td>
 								<td align="center"> <?= $oRequirement['nomeRequisito'];?> </td>
 								<td align="center"> <?= $oRequirement['descricaoRequisito'];?> </td>

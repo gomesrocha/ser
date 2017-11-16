@@ -1,26 +1,24 @@
 <?php
 	$sUserName = new Sessao();
-	$aAllRequerement = new Sessao();
-	$aAllRequerementProject = $aAllRequerement->getSessao("allRequirements");
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<title></title>
-		<link href="../css/Principal.css" rel="stylesheet" type="text/css" />
-		<link href="../css/StyleSheet.css" rel="stylesheet" type="text/css" />
-		<script type="text/javascript" src="JS/Mascara.js"></script>
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	</head>
-	<body>
-		<form action="" method="post">
-			<?php
-				$aAllTypeRequirement	= TypeRequirement::allTypeRequirement();
-				$aAllTask 				= Task::allTask();
-				$aAllProject 			= Project::allProject();
-			?>
-			<div id="top-nav" class="navbar navbar-inverse navbar-static-top">
+<head>
+    <title></title>
+    <link href="../css/Principal.css" rel="stylesheet" type="text/css" />
+    <link href="../css/StyleSheet.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+</head>
+<body>
+    <form action="" method="post">
+		<?php
+			$sUserName = new Sessao();
+			$aAllRequerement = new Sessao();
+			$aAllRequerementProject = $aAllRequerement->getSessao("allRequirements");
+		?>
+     <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -29,10 +27,8 @@
                 </button>
                 <p class="navbar-brand" >SER - Sistema De Engenharia de Requisitos</p>
             </div> 
-
-			
 		
-           <div class="navbar-collapse collapse">
+            <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown"><a  role="button" 
                         ><i class="glyphicon glyphicon-user"></i><?php echo $sUserName->getSessao("sUserName");?> 
@@ -49,13 +45,13 @@
     </div>
     <!-- /Header -->
     <!-- Main -->
-    <div class="container-fluid">
+     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-3">
                 <!-- Left column -->
                 <hr />
                 <ul class="list-unstyled">
-                   <li class="nav-header">
+                     <li class="nav-header">
                         <h5>
                             Cadastros 
                         </h5>
@@ -89,7 +85,7 @@
 					<hr />
                     
                     <hr />
-					  <li class="nav-header">
+					<li class="nav-header">
                         <h5>
                             Relatorios <i class="glyphicon glyphicon-chevron-down"></i>
                         </h5>
@@ -118,10 +114,10 @@
 							<ul>
 									<li><a href="/ser/task/createallreporttasks"><i class="glyphicon glyphicon-print"></i> Todos as Tarefas </a></li>
 									<li><a href="/ser/task/pagereporttaskprojects"><i class="glyphicon glyphicon-print"></i> Tarefas Por Projeto </a></li>
+									<li><a href="/ser/task/pagereporttaskrequirement"><i class="glyphicon glyphicon-print"></i> Tarefas Por Requisitos </a></li>
 									<li><a href="/ser/task/pagereporttaskusers"><i class="glyphicon glyphicon-print"></i> Tarefas Por Usuario </a></li>
 									<li><a href="/ser/task/pagereporttaskdatestart"> <i class="glyphicon glyphicon-print"></i> Tarefas Por Inicio </a></li>
 									<li><a href="/ser/task/pagereporttaskdatefinish"><i class="glyphicon glyphicon-print"></i> Tarefas Por Termino </a></li>
-									<li><a href="/ser/task/pagereporttaskperiod"><i class="glyphicon glyphicon-print"></i> Tarefas Por Periodo </a></li>
 									<li><a href="/ser/task/pagereporttaskperiod"><i class="glyphicon glyphicon-print"></i> Tarefas Por Periodo </a></li>
 								</ul>
 							
@@ -155,13 +151,12 @@
                                     <table border="1" class="table">
 
 			<tr>
-				<th colspan="11" align="center">REQUISITOS</th>
+				<th colspan="9" align="center">REQUISITOS</th>
 			</tr>
 			
 			<tr>
 				<td  align="center">ID</td>
 				<td  align="center">Tipo</td>
-				<td  align="center">Tarefa </td>
 				<td  align="center">Projeto</td>
 				<td  align="center">Nome </td>
 				<td  align="center">Descricao</td>
@@ -178,14 +173,12 @@
 				    {
 						foreach ($aAllRequerementProject as $oRequirement) 
 						{
-							$oVisualizeTypeRequirement = TypeRequirement::findTypeRequirement($oRequirement['TipoRequisito_idTipoRequisito']);
-							$oVisualizeProject = Project::findProject($oRequirement['Projeto_idProjeto']);
-							$oVisualizeTask = Task::findTask($oRequirement['Tarefa_idTarefa']);
+							$oVisualizeTypeRequirement = TypeRequirement::findTypeRequirement($oRequirement['tipoRequisito_idTipoRequisito']);
+							$oVisualizeProject = Project::findProject($oRequirement['projeto_idProjeto']);
 				?>	
 							<tr>
 								<td align="center"> <?= $oRequirement['idRequisito'];?> </td>
 								<td align="center"> <?= $oVisualizeTypeRequirement['nomeTipoRequisito'];?> </td>
-								<td align="center"> <?= $oVisualizeTask['nomeTarefa'];?> </td>
 								<td align="center"> <?= $oVisualizeProject['nomeProjeto'];?> </td>
 								<td align="center"> <?= $oRequirement['nomeRequisito'];?> </td>
 								<td align="center"> <?= $oRequirement['descricaoRequisito'];?> </td>
@@ -251,5 +244,3 @@
 </body>
 </html>
 			
-			
-          

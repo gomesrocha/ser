@@ -51,7 +51,7 @@
                                     <label>
                                         Email</label>
                                     <div class="controls">
-										<input type="email" name ="sEmail" required="" class="form-control"/>
+										<input type="email" name ="sEmail" autocomplete="off"  class="form-control"/>
 										</br>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@
                                     <label>
                                         CPF</label>
                                     <div class="controls">
-                                        <input type="text" name ="sUserCpf"  class="form-control" maxlength="14" id= "cpf" onKeyUp="formataCPF(cpf,event)" required/>
+                                        <input type="text" name ="sUserCpf" autocomplete="off"  class="form-control" maxlength="14" id= "cpf" onKeyUp="formataCPF(cpf,event)" />
                                         <br />
                                     </div>
                                 </div>
@@ -68,18 +68,22 @@
                                     <label>
                                         Nova Senha</label>
                                     <div class="controls">
-                                        <input type="password" name ="sUserPassword"  class="form-control" maxlength="10" id= "password"  required/>
+                                        <input type="password" name ="sUserPassword"  class="form-control" maxlength="10" id= "password"  />
                                         <br />
                                     </div>
                                 </div>
                              <div class="control-group col-md-12">
                                    
                                     <div class="controls">
-                                        <input type="submit" name = "btnSend" class="btn btn-success" style = "margin-left: 130px" value="Enviar Email"
-                                             />
-										
-									</div>
-								</div>
+                                        <div class="control-group col-md-12">
+                                   
+											<div class="controls">
+												<input type="submit" name = "btnAdd" class="btn btn-success" value="Cadastrar"/>
+												<input type="submit" name = "btnVoltar" class="btn btn-primary" value="Voltar"/>
+											</div>
+										</div>
+                                </div>
+							</div>
                             </div>  
                             <!--/panel content-->
                         </div>

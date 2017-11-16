@@ -19,7 +19,6 @@
     <form action="" method="post">
 		<?php
 			$aAllTypeRequirement	= TypeRequirement::allTypeRequirement();
-			$aAllTask 				= Task::allTask();
 			$aAllProject 			= Project::allProject();
 		?>
       <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
@@ -123,13 +122,12 @@
                                     <table border="1" class="table">
 
 			<tr>
-				<th colspan="11" align="center">REQUISITOS</th>
+				<th colspan="10" align="center">REQUISITOS</th>
 			</tr>
 			
 			<tr>
 				<td  align="center">ID</td>
 				<td  align="center">Tipo</td>
-				<td  align="center">Tarefa </td>
 				<td  align="center">Projeto</td>
 				<td  align="center">Nome </td>
 				<td  align="center">Descricao</td>
@@ -147,14 +145,12 @@
 				    {
 						foreach ($aAllApprovedRequerementProject as $oRequirement) 
 						{
-							$oVisualizeTypeRequirement = TypeRequirement::findTypeRequirement($oRequirement['TipoRequisito_idTipoRequisito']);
-							$oVisualizeProject = Project::findProject($oRequirement['Projeto_idProjeto']);
-							$oVisualizeTask = Task::findTask($oRequirement['Tarefa_idTarefa']);
+							$oVisualizeTypeRequirement = TypeRequirement::findTypeRequirement($oRequirement['tipoRequisito_idTipoRequisito']);
+							$oVisualizeProject = Project::findProject($oRequirement['projeto_idProjeto']);
 				?>	
 							<tr>
 								<td align="center"> <?= $oRequirement['idRequisito'];?> </td>
 								<td align="center"> <?= $oVisualizeTypeRequirement['nomeTipoRequisito'];?> </td>
-								<td align="center"> <?= $oVisualizeTask['nomeTarefa'];?> </td>
 								<td align="center"> <?= $oVisualizeProject['nomeProjeto'];?> </td>
 								<td align="center"> <?= $oRequirement['nomeRequisito'];?> </td>
 								<td align="center"> <?= $oRequirement['descricaoRequisito'];?> </td>

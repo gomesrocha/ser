@@ -107,7 +107,21 @@
 		
 		public function Password()
 		{
-			User::Password($this->post("sEmail"),$this->post("sUserCpf"),$this->post("sUserPassword"));
+			if($this->post("btnVoltar"))
+			{
+				$this->redirect("pagelogin");
+			}
+			if( !empty($this->post("sEmail")) && !empty($this->post("sUserCpf")) && !empty($this->post("sUserPassword")))
+			{
+				User::Password($this->post("sEmail"),$this->post("sUserCpf"),$this->post("sUserPassword"));
+			}
+			else
+			{
+				echo "<script> 
+						alert('Dados Devem Ser Preenchidos !!!');
+						window.location.href = '/ser/login/pagechangepassword';
+			     </script>";
+			}
 		}	
 		
 		public function createAllReportUsers()

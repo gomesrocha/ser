@@ -678,7 +678,7 @@ abstract class AbstractController{
 	{
 		$bLogged = new Sessao();
 		$bManager = new Sessao();
-		if($bLogged->getSessao("bLogged") && $bManager->getSessao("bAnalyst"))
+		if($bLogged->getSessao("bLogged") && $bManager->getSessao("bManager"))
 		{
 			include 'view/pageReportTaskRequirement.php';
 		}

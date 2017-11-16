@@ -18,7 +18,7 @@
 <body>
      <form action="/ser/requirement/createallreporttaskrequirement" method="post">
 	 <?php
-			$aAllTask = Task::allTask(); 
+			$aAllRequirement = Requirement::allRequirement(); 
 	
 		?>
     <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
@@ -150,20 +150,20 @@
                                 <div class="panel-title">
                                     <i class="glyphicon glyphicon-wrench pull-right"></i>
                                     <h4 id="head_pagina">
-                                        Relatorio De Requisitos Por Tarefa</h4>
+                                        Relatorio De Tarefas Por Requisito</h4>
                                 </div>
                             </div>
                             <div class="panel-body">							
 								<div class="control-group col-md-4">
                                     <label>
-                                        Tarefa</label>
+                                        Requisito</label>
                                     <div class="controls">
                                         <select name = "iIdTask" autocomplete = "off" class="form-control">
 											<?php
-												foreach($aAllTask as $aTask)
+												foreach($aAllRequirement as $aRequirement)
 												{
 											?>		
-											 <option value= '<?=  $aTask['idTarefa'] ?>'><?=  $aTask['nomeTarefa'] ?></option>
+											 <option value= '<?=  $aRequirement['idRequisito'] ?>'><?=  $aRequirement['nomeRequisito'] ?></option>
 											<?php
 												}
 											?>

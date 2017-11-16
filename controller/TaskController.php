@@ -10,7 +10,7 @@
 
 		public function addTask()
 		{
-			if( !empty($this->post("sProjectId")) && !empty($this->post("sUserId")) && !empty($this->post("sTaskName"))
+			if( !empty($this->post("iProjectId")) && !empty($this->post("iUserId")) && !empty($this->post("sTaskName"))
 				 && !empty($this->post("sTaskDateConclusion"))   )
 			{	
 				$timeZone = new DateTimeZone('UTC');
@@ -18,7 +18,7 @@
 				$dDateFinish = DateTime::createFromFormat ('d/m/Y', $this->post("sTaskDateConclusion"), $timeZone);
 				if($dDateFinish > $dDateStart )
 				{
-					$oTask  = new Task($this->post("sProjectId"),$this->post("sUserId"),$this->post("sTaskDateStart"),
+					$oTask  = new Task($this->post("iProjectId"),$this->post("iUserId"),$this->post("iRequirementId"),$this->post("sTaskDateStart"),
 									$this->post("sTaskName"),$this->post("sTaskDateConclusion"),$this->post("sTaskObs"),$this->post("sTaskNameDepend"));
 					Task::addTask($oTask);	
 				}
@@ -49,25 +49,32 @@
 		public function updateTask()
 		{
 		
-			if( !empty($this->post("sProjectId")) && !empty($this->post("sUserId")) && !empty($this->post("sTaskName"))
+			if( !empty($this->post("iProjectId")) && !empty($this->post("iUserId")) && !empty($this->post("sTaskName"))
 				 && !empty($this->post("sTaskDateConclusion"))   )
 			{	
 				$timeZone = new DateTimeZone('UTC');
-				$dDateStart = DateTime::createFromFormat ('d/m/Y', $this->post("sTaskDateStart"), $timeZone);
+				$dDateStart = DateTime::createFromFormat ('d/m/Y', date('d/m/Y'), $timeZone);
 				$dDateFinish = DateTime::createFromFormat ('d/m/Y', $this->post("sTaskDateConclusion"), $timeZone);
 				if($dDateFinish > $dDateStart )
 				{
-					$oTask  = new Task($this->post("sProjectId"),$this->post("sUserId"),$this->post("sTaskDateStart"),
+					$oTask  = new Task($this->post("iProjectId"),$this->post("iUserId"),$this->post("iRequirementId"),$this->post("sTaskDateStart"),
 									$this->post("sTaskName"),$this->post("sTaskDateConclusion"),$this->post("sTaskObs"),$this->post("sTaskNameDepend"));
-					Task::updateTask($oTask);
+					Task::updateTask($oTask);	
 				}
 				else
 				{
 					echo "<script> 
 								alert('Data De Conclusao Não Deve Ser Menor Que A Data Inicial Da Tarefa !!!');
-								window.location.href = '/ser/login/pageedittask';
+								window.location.href = '/ser/login/pagevisualizetask';
 						</script>";
 				}
+			}
+			else
+			{
+				echo "<script> 
+								alert('Dados Não Foram Preenchidos !!!');
+								window.location.href = '/ser/login/pageupdatetask';
+						</script>";
 			}
 		}
 		

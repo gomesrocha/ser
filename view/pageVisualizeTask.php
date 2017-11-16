@@ -113,6 +113,7 @@
 							<ul>
 									<li><a href="/ser/task/createallreporttasks"><i class="glyphicon glyphicon-print"></i> Todos as Tarefas </a></li>
 									<li><a href="/ser/task/pagereporttaskprojects"><i class="glyphicon glyphicon-print"></i> Tarefas Por Projeto </a></li>
+									<li><a href="/ser/task/pagereporttaskrequirement"><i class="glyphicon glyphicon-print"></i> Tarefas Por Requisitos </a></li>
 									<li><a href="/ser/task/pagereporttaskusers"><i class="glyphicon glyphicon-print"></i> Tarefas Por Usuario </a></li>
 									<li><a href="/ser/task/pagereporttaskdatestart"> <i class="glyphicon glyphicon-print"></i> Tarefas Por Inicio </a></li>
 									<li><a href="/ser/task/pagereporttaskdatefinish"><i class="glyphicon glyphicon-print"></i> Tarefas Por Termino </a></li>
@@ -173,16 +174,16 @@
 			
 						foreach ($aAllTask as $oTask) 
 						{
-							if(!empty($oTask['Tarefa_idTarefa']))
+							if(!empty($oTask['tarefa_idTarefa']))
 							{
-								$oDepTask = Task::depTask($oTask['Tarefa_idTarefa']);
+								$oDepTask = Task::depTask($oTask['tarefa_idTarefa']);
 							}
 							else
 							{
 								$oDepTask = null;
 							}
-							$oProject = Project::findProject($oTask['Projeto_idProjeto']);
-							$oUser    = User::findUser($oTask['Usuario_idUsuario']);						
+							$oProject = Project::findProject($oTask['projeto_idProjeto']);
+							$oUser    = User::findUser($oTask['usuario_idUsuario']);						
 				?>	
 							<tr>
 								<td align="center"> <?= $oTask['idTarefa'];?> </td>

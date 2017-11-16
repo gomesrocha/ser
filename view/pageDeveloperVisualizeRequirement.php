@@ -18,7 +18,6 @@
 		<?php
 			$aAllTypeRequirement = TypeRequirement::allTypeRequirement();
 			$aAllProject = Project::allUserProject();
-			$aAllTask = Task::allTask();
 			$aRequirement = Requirement::findDeveloperRequirement();
 		?>
       <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
@@ -127,24 +126,6 @@
 												{
 											?>		
 											<option  <?php echo $aRequirement['TipoRequisito_idTipoRequisito'] == $oTypeRequirement['idTipoRequisito'] ? 'selected':'';?> value="<?= $oTypeRequirement['idTipoRequisito']?>"> <?= $oTypeRequirement['nomeTipoRequisito']?></option>
-											<?php
-												}
-											?>
-
-										</select>
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="control-group col-md-6">
-                                    <label>
-                                        Tarefa</label>
-                                    <div class="controls">
-                                        <select name = "iRequirementTask" class="form-control"  readonly="true">
-											<?php
-												foreach($aAllTask as $oTask)
-												{
-											?>		
-											 <option  <?php echo $aRequirement['Tarefa_idTarefa'] == $oTask['idTarefa'] ? 'selected':'';?> value="<?= $oTask['idTarefa']?>"> <?= $oTask['nomeTarefa']?></option>
 											<?php
 												}
 											?>

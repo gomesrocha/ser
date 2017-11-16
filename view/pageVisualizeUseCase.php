@@ -99,7 +99,6 @@
 								<ul>
 									<li><a href="/ser/requirement/createallreportrequirement"><i class="glyphicon glyphicon-print"></i> Todos os Requisitos </a></li>
 									<li><a href="/ser/requirement/pagereportprojectrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Projeto </a></li>
-									<li><a href="/ser/requirement/pagereporttaskrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Tarefa </a></li>
 									<li><a href="/ser/requirement/pagereportrequirementtyperequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Tipo de Requisito </a></li>
 									<li><a href="/ser/requirement/pagereportstartdaterequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Data De Inicio </a></li>
 									<li><a href="/ser/requirement/pagereportfinishdaterequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Data De Fim </a></li>
@@ -174,11 +173,11 @@
 						foreach ($aAllUseCase as $oUseCase) 
 						{	
 						
-						 
+							$aDiagram = Diagram::findDiagram($oUseCase['diagrama_idDiagrama']);
 				?>	
 							<tr>
 								<td align="center"> <?= $oUseCase['idCasoDeUso'];?> </td>
-								<td align="center"> <?= $oUseCase['Diagrama_idDiagrama'];?> </td>
+								<td align="center"> <?= $aDiagram['nomeDiagrama'];?> </td>
 								<td align="center"> <?= $oUseCase['nomeCasoDeUso'];?> </td>
 								<td align="center"> <a href="/ser/case/editusecase/<?= $oUseCase['idCasoDeUso']?>">Editar  </a>
 								<a  href="/ser/case/removeusecase/<?= $oUseCase['idCasoDeUso'] ?> ">Deletar</a> </td>

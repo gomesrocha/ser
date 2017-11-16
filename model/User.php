@@ -169,7 +169,8 @@
 				$rDatabaseHandler->add($sQuery,$rConnection,$aArrayParam);
 				$rDatabaseHandler->commit($rConnection);
 				$rConnection = $rDatabaseHandler->close($rConnection);
-				self::sendEmail($oUser->getEmail(),$sUserName->getSessao("sUserName"),"Vinculo de Usuario Ao Projeto","Olá !!! Você acaba de ser vinculado a um projeto por ".$sUserName->getSessao("sUserName")." .Por favor, confira sua conta. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
+				$aUser = self::findUser($iIdLinkUser);
+				self::sendEmail($$aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Vinculo de Usuario Ao Projeto","Olá !!! Você acaba de ser vinculado a um projeto por ".$sUserName->getSessao("sUserName")." .Por favor, confira sua conta. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
 				echo "<script> 
 							alert('Usuario Linkado ao Projeto Com Sucesso !!!');
 							window.location.href = '/ser/login/pagelinkproject';
@@ -224,7 +225,8 @@
 					$rDatabaseHandler->deleteDate($sQuery,$rConnection,$aArrayParam);
 					$rDatabaseHandler->commit($rConnection);
 					$rConnection = $rDatabaseHandler->close($rConnection);
-					self::sendEmail($oUser->getEmail(),$sUserName->getSessao("sUserName"),"Desvinculo de Usuario Ao Projeto","Olá !!! Você acaba de ser desvinculado a um projeto por ".$sUserName->getSessao("sUserName")." . Por favor, confira sua conta. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
+					$aUser = self::findUser($iIdUser);
+					self::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Desvinculo de Usuario Ao Projeto","Olá !!! Você acaba de ser desvinculado a um projeto por ".$sUserName->getSessao("sUserName")." . Por favor, confira sua conta. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
 					echo "<script> 
 							alert('Usuario Desvinculado Com Sucesso !!!');
 							window.location.href = '/ser/login/pageremovelinkproject';
@@ -383,16 +385,18 @@
 			{
 				$aJson = CommonFunctions::readJSON("database/.config.json");
 				$rDatabaseHandler = new SerDatabaseHandler($aJson);
+				$sUserName = new Sessao();
 				$rConnection = $rDatabaseHandler->getInstance();
 				$rDatabaseHandler->begin($rConnection);
 				$sQuery = "DELETE FROM usuario WHERE idUsuario = ? ";
 				$aArrayParam = [$iIdUser];
+				$aUser = self::findUser($iIdUser);
 				$lDeleted = $rDatabaseHandler->deleteDate($sQuery,$rConnection,$aArrayParam);
 				if($lDeleted)
 				{
 					$rDatabaseHandler->commit($rConnection);
 					$rConnection = $rDatabaseHandler->close($rConnection);
-					self::sendEmail($oUser->getEmail(),$sUserName->getSessao("sUserName"),"Remoção de Usuario ","Olá !!! Você acaba de ser removido do SER por ".$sUserName->getSessao("sUserName")." . Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
+					self::sendEmail($aUser['emailUsuario'] ,$sUserName->getSessao("sUserName"),"Remoção de Usuario ","Olá !!! Você acaba de ser removido do SER por ".$sUserName->getSessao("sUserName")." . Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
 					echo "<script> 
 						alert('Usuario Deletado Com Sucesso !!!');
 						window.location.href = '/ser/login/pagevisualizeuser';
@@ -954,9 +958,13 @@
 			// É necessário indicar que o formato do e-mail é html
 			$sHeaders  = 'MIME-Version: 1.0' . "\r\n";
 			$sHeaders .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n"."\r\n";
+			$headers = 'From: ser@midasprocesses.com' . "\r\n" .
+			'Reply-To: ser@midasprocesses.com' . "\r\n" .
+			'X-Mailer: PHP/' . phpversion();
 			$sHeaders .= 'Usuario:'.$sUserName."\r\n"."\r\n";
 			$sHeaders .= $sMsg; 
 			//$headers .= "Bcc: $EmailPadrao\r\n";
 			$sEnviarEmail = mail($sDestino, $sAssunto, $sHeaders);
+
 		}
 	}

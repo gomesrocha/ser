@@ -103,7 +103,6 @@
 								<ul>
 									<li><a href="/ser/requirement/createallreportrequirement"><i class="glyphicon glyphicon-print"></i> Todos os Requisitos </a></li>
 									<li><a href="/ser/requirement/pagereportprojectrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Projeto </a></li>
-									<li><a href="/ser/requirement/pagereporttaskrequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Tarefa </a></li>
 									<li><a href="/ser/requirement/pagereportrequirementtyperequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Tipo de Requisito </a></li>
 									<li><a href="/ser/requirement/pagereportstartdaterequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Data De Inicio </a></li>
 									<li><a href="/ser/requirement/pagereportfinishdaterequirement"><i class="glyphicon glyphicon-print"></i> Requisitos Por Data De Fim </a></li>
@@ -163,24 +162,6 @@
 												{
 											?>		
 											<option  <?php echo $oEditRequirement['TipoRequisito_idTipoRequisito'] == $oTypeRequirement['idTipoRequisito'] ? 'selected':'';?> value="<?= $oTypeRequirement['idTipoRequisito']?>"> <?= $oTypeRequirement['nomeTipoRequisito']?></option>
-											<?php
-												}
-											?>
-
-										</select>
-                                        <br />
-                                    </div>
-                                </div>
-                                <div class="control-group col-md-6">
-                                    <label>
-                                        Tarefa</label>
-                                    <div class="controls">
-                                        <select name = "iRequirementTask" class="form-control">
-											<?php
-												foreach($aAllTask as $oTask)
-												{
-											?>		
-											 <option  <?php echo $oEditRequirement['Tarefa_idTarefa'] == $oTask['idTarefa'] ? 'selected':'';?> value="<?= $oTask['idTarefa']?>"> <?= $oTask['nomeTarefa']?></option>
 											<?php
 												}
 											?>

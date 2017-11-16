@@ -3,7 +3,6 @@
 	class Requirement
 	{
 		private $iIdRequirement;
-		private $iIdTask;
 		private $iIdProject;
 		private $iIdTypeRequirement;
 		private $sRequirementName;
@@ -13,10 +12,9 @@
 		private $iImportanceRequirement;
 		private $sSituationRequirement;
 		
-		function __construct($iIdTask,$iIdProject,$iIdTypeRequirement,$sRequirementName,$iImportanceRequirement,$dStartDateRequirement,$dFinishDateRequirement,$sDescriptionRequirement,$sSituationRequirement)
+		function __construct($iIdProject,$iIdTypeRequirement,$sRequirementName,$iImportanceRequirement,$dStartDateRequirement,$dFinishDateRequirement,$sDescriptionRequirement,$sSituationRequirement)
 		{
 			$this->iIdTypeRequirement   	= $iIdTypeRequirement;
-			$this->iIdTask   				= $iIdTask;
 			$this->iIdProject   			= $iIdProject;
 			$this->sRequirementName 		= $sRequirementName;
 			$this->iImportanceRequirement 	= $iImportanceRequirement;
@@ -34,11 +32,6 @@
 		public function getIdTypeRequirement()
 		{
 			return $this->iIdTypeRequirement;
-		}
-		
-		public function getIdTask()
-		{
-			return $this->iIdTask;
 		}
 		
 		public function getIdProject()
@@ -89,11 +82,6 @@
 		public function setIdProject($iIdProject)
 		{
 			$this->iIdProject = $iIdProject;
-		}
-		
-		public function setIdTask($iIdTask)
-		{
-			$this->iIdTask = $iIdTask;
 		}
 		
 		public function setRequirementName($sRequirementName)
@@ -160,10 +148,10 @@
 				$rDatabaseHandler = new SerDatabaseHandler($aJson);
 				$rConnection = $rDatabaseHandler->getInstance();
 				$rDatabaseHandler->begin($rConnection);
-				$sQuery = "INSERT INTO requisito(TipoRequisito_idTipoRequisito,Tarefa_idTarefa,Projeto_idProjeto,
+				$sQuery = "INSERT INTO requisito(TipoRequisito_idTipoRequisito,Projeto_idProjeto,
 												nomeRequisito,descricaoRequisito,dataInicioRequisito,dataTerminoRequisito,importanciaRequisito,situacaoRequisito) 
-							VALUES (?,?,?,?,?,?,?,?,?) ";
-				$aArrayParam = [$oRequirement->getIdTypeRequirement(),$oRequirement->getIdTask(),$oRequirement->getIdProject(),
+							VALUES (?,?,?,?,?,?,?,?) ";
+				$aArrayParam = [$oRequirement->getIdTypeRequirement(),$oRequirement->getIdProject(),
 								$oRequirement->getRequirementName(),$oRequirement->getDescriptionRequirement(),$oRequirement->getStartDate(),
 								$oRequirement->getFinishDate(),$oRequirement->getImportance(),$oRequirement->getSituation()];
 				$rDatabaseHandler->add($sQuery,$rConnection,$aArrayParam);
@@ -172,7 +160,7 @@
 				$aProject = Project::findProject($oRequirement->getIdProject());
 				$aUser = User::findUser($aProject['Usuario_idUsuario']);
 				$sUserName = new Sessao();
-				self::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Requisito do Projeto ".$aProject['nomeProjeto'],'Olá !!! Há uma novo requisito chamado'.$oRequirement->getRequirementName().' vinculado a você ao projeto '.$aProject['nomeProjeto'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
+				User::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Requisito do Projeto ".$aProject['nomeProjeto'],'Olá !!! Há uma novo requisito chamado'.$oRequirement->getRequirementName().' vinculado a você ao projeto '.$aProject['nomeProjeto'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
 				echo "<script> 
 							alert('Cadastro Feito Com Sucesso !!!');
 							window.location.href = '/ser/login/pageaddrequirement';
@@ -197,7 +185,6 @@
 				$rDatabaseHandler->begin($rConnection);
 				$sQuery = "UPDATE requisito SET 
 										TipoRequisito_idTipoRequisito = ?,
-										Tarefa_idTarefa = ?,
 										Projeto_idProjeto = ?,
 										nomeRequisito = ?,
 										descricaoRequisito = ?,
@@ -206,7 +193,7 @@
 										importanciaRequisito = ?,
 										situacaoRequisito = ?
 							WHERE idRequisito = ? ";
-				$aArrayParam = [$oRequirement->getIdTypeRequirement(),$oRequirement->getIdTask(),$oRequirement->getIdProject(),
+				$aArrayParam = [$oRequirement->getIdTypeRequirement(),$oRequirement->getIdProject(),
 								$oRequirement->getRequirementName(),$oRequirement->getDescriptionRequirement(),$oRequirement->getStartDate(),
 								$oRequirement->getFinishDate(),$oRequirement->getImportance(),$oRequirement->getSituation()];
 				$aArrayCondicao = [$iId];
@@ -216,7 +203,7 @@
 				$aProject = Project::findProject($oRequirement->getIdProject());
 				$aUser = User::findUser($aProject['Usuario_idUsuario']);
 				$sUserName = new Sessao();
-				self::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Requisito do Projeto ".$aProject['nomeProjeto'],'Olá !!! Houve uma alteração no requisito'.$oRequirement->getRequirementName().' para você vinculada ao projeto '.$aProject['nomeProjeto'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
+				User::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Requisito do Projeto ".$aProject['nomeProjeto'],'Olá !!! Houve uma alteração no requisito'.$oRequirement->getRequirementName().' para você vinculada ao projeto '.$aProject['nomeProjeto'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
 				echo "<script> 
 						alert('Requisito Alterado Com Sucesso !!!');
 						window.location.href = '/ser/login/pagevisualizerequirement';
@@ -248,11 +235,9 @@
 				$rDatabaseHandler->commit($rConnection);
 				$rConnection = $rDatabaseHandler->close($rConnection);
 				$aRequirement = Requirement::findRequirement($iId); 
-				$aTask = Task::findTask($aRequirement["Tarefa_idTarefa"]);
-				$aUser = User::findUser($aTask["Usuario_idUsuario"]);
 				$aProject = Project::findProject($aRequirement["Projeto_idProjeto"]);
 				$sUserName = new Sessao();
-				User::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Requisito do Projeto ".$aProject['nomeProjeto']."",'Olá !!! O requisito '.$aRequirement['nomeRequisito'].' vinculado ao projeto '.$aProject['nomeProjeto'].' teve seu status mudado para '.$aRequirement['situacaoRequisito'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
+				User::sendEmail($aProject["Usuario_idUsuario"],$sUserName->getSessao("sUserName"),"Requisito do Projeto ".$aProject['nomeProjeto']."",'Olá !!! O requisito '.$aRequirement['nomeRequisito'].' vinculado ao projeto '.$aProject['nomeProjeto'].' teve seu status mudado para '.$aRequirement['situacaoRequisito'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
 				echo "<script> 
 						alert('Requisito Alterado Com Sucesso !!!');
 						window.location.href = '/ser/login/pagekeyuservisualizeproject';
@@ -307,7 +292,7 @@
 			$aJson = CommonFunctions::readJSON("database/.config.json");
 			$rDatabaseHandler = new SerDatabaseHandler($aJson);
 			$rConnection = $rDatabaseHandler->getInstance();
-			$sQuery = "SELECT * FROM requisito where idRequisito = ?  ";
+			$sQuery = "SELECT * FROM requisito WHERE idRequisito = ?  ";
 			$aArrayParam = [$iIdRequirement];
 			$aRequirement = $rDatabaseHandler->query($sQuery,$rConnection,$aArrayParam,false);
 			return $aRequirement;		
@@ -320,7 +305,7 @@
 			$aJson = CommonFunctions::readJSON("database/.config.json");
 			$rDatabaseHandler = new SerDatabaseHandler($aJson);
 			$rConnection = $rDatabaseHandler->getInstance();
-			$sQuery = "SELECT * FROM requisito where idRequisito = ?  ";
+			$sQuery = "SELECT * FROM requisito WHERE idRequisito = ?  ";
 			$aArrayParam = [$iId];
 			$aRequirement = $rDatabaseHandler->query($sQuery,$rConnection,$aArrayParam,false);
 			return $aRequirement;		
@@ -333,7 +318,7 @@
 			$aJson = CommonFunctions::readJSON("database/.config.json");
 			$rDatabaseHandler = new SerDatabaseHandler($aJson);
 			$rConnection = $rDatabaseHandler->getInstance();
-			$sQuery = "SELECT * FROM requisito where idRequisito = ?  ";
+			$sQuery = "SELECT * FROM requisito WHERE idRequisito = ?  ";
 			$aArrayParam = [$iId];
 			$aRequirement = $rDatabaseHandler->query($sQuery,$rConnection,$aArrayParam,false);
 			return $aRequirement;		
@@ -346,7 +331,7 @@
 			$aJson = CommonFunctions::readJSON("database/.config.json");
 			$rDatabaseHandler = new SerDatabaseHandler($aJson);
 			$rConnection = $rDatabaseHandler->getInstance();
-			$sQuery = "SELECT * FROM requisito where idRequisito = ?  ";
+			$sQuery = "SELECT * FROM requisito WHERE idRequisito = ?  ";
 			$aArrayParam = [$iId];
 			$aRequirement = $rDatabaseHandler->query($sQuery,$rConnection,$aArrayParam,false);
 			return $aRequirement;		
@@ -359,7 +344,7 @@
 				$aJson = CommonFunctions::readJSON("database/.config.json");
 				$rDatabaseHandler = new SerDatabaseHandler($aJson);
 				$rConnection = $rDatabaseHandler->getInstance();
-				$sQuery = "SELECT * FROM requisito where Projeto_idProjeto = ?";
+				$sQuery = "SELECT * FROM requisito WHERE Projeto_idProjeto = ?";
 				$aArrayParam = [$iIdProject];
 				$aReport = $rDatabaseHandler->query($sQuery,$rConnection,$aArrayParam,true);		
 				if (empty($aReport))
@@ -378,16 +363,16 @@
 			}
 		}
 	
-		public static function consultTaskRequirement($iIdTask)
+		public static function consultTaskRequirement($iIdRequirement)
 		{
 			try
 			{
 				$aJson = CommonFunctions::readJSON("database/.config.json");
 				$rDatabaseHandler = new SerDatabaseHandler($aJson);
 				$rConnection = $rDatabaseHandler->getInstance();
-				$sQuery = "SELECT * FROM requisito WHERE Tarefa_idTarefa = ?";
-				$aArrayParam = [$iIdTask];
-				$aReport = $rDatabaseHandler->query($sQuery,$rConnection,$aArrayParam,true);		
+				$sQuery = "SELECT * FROM tarefa WHERE requisito_idRequisito = ?";
+				$aArrayParam = [$iIdRequirement];
+				$aReport = $rDatabaseHandler->query($sQuery,$rConnection,$aArrayParam,true);	
 				if (!empty($aReport))
 				{
 					return $aReport;
@@ -599,14 +584,13 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -616,15 +600,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -662,14 +644,13 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -679,15 +660,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -707,7 +686,7 @@
 		
 		public static function createAllReportTaskRequirement($iIdTask)
 		{		
-			$aAllRequirement = self::consultTaskRequirement($iIdTask);
+			$aAllTask = self::consultTaskRequirement($iIdTask);
 			$sHTML =  '<html>
 						<head>
 							<title></title>
@@ -725,44 +704,49 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
-												<td  align="center">Tipo</td>
-												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
-												<td  align="center">Nome</td>
-												<td  align="center">Data De Inicio </td>
-												<td  align="center">Data De Termino </td>
-												<td  align="center">Importancia </td>
-												<td  align="center">Situacao </td>
-											</tr>
-							 ';
-			foreach ($aAllRequirement as $aRequirement) 
+												<td  align="center">Nome da Tarefa</td>
+												<td  align="center">Projeto</td>
+												<td  align="center">Requisito</td>
+												<td  align="center">Usuario </td>												
+												<td  align="center">Tarefa Dep. </td>
+												<td  align="center">Data de Inicio </td>
+												<td  align="center">Data de Fim </td>
+											</tr> ';
+			foreach ($aAllTask as $aTask) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aUser = User::findUser($aTask['usuario_idUsuario']);
+				$aProject = Project::findProject($aTask['projeto_idProjeto']);
+				$aRequirement  = Requirement::findRequirement($aTask['requisito_idRequisito']);
+				if(!empty($aTask['tarefa_idTarefa']))
+				{
+					$aDepTask = Task::depTask($aTask['tarefa_idTarefa']); 
+				}
+				else
+				{
+					$aDepTask = null;
+				}
 				$sHTML.= '
-							<tr>
-								<td align="center">'.$aRequirement['idRequisito'].' </td>
-								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
-								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
-								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
-								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
-								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
-								<td align="center">'.$aRequirement['importanciaRequisito'].' </td>	
-								<td align="center">'.$aRequirement['situacaoRequisito'].' </td>		
-							</tr>
+						<tr>
+							<td align="center">'.$aTask['idTarefa'].' </td>
+							<td align="center">'.$aRequirement['nomeRequisito'].' </td>
+							<td align="center">'.$aTask['nomeTarefa'].' </td>
+							<td align="center">'.$aProject['nomeProjeto'].' </td>
+							<td align="center">'.$aUser ['nomeUsuario'].'  </td>
+							<td align="center">'.$aDepTask['nomeTarefa'].' </td>
+							<td align="center">'.$aTask['dataInicioTarefa'].' </td>
+							<td align="center">'.$aTask['dataTerminoTarefa'].' </td>	
+						</tr>
 						';
 			}
-			$sHTML.=' 		</table>
+			$sHTML.='		</table>
 						</body>
 					</html>';
-			$arquivo = "Relatorio De Requisitos Por Tarefa.pdf";
+			$arquivo = "Relatorio de Tarefas.pdf";
 			$mpdf = new mPDF();
 			$mpdf->WriteHTML($sHTML);	
 			$mpdf->Output($arquivo,'I');
@@ -788,14 +772,13 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -805,15 +788,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -851,14 +832,13 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -868,15 +848,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -914,14 +892,13 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -931,15 +908,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
-								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
+								<td align="center">'.$aProject['nomeProjeto'].' </td>>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -977,14 +952,13 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -994,15 +968,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -1047,7 +1019,6 @@
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -1057,15 +1028,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -1103,14 +1072,13 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -1120,15 +1088,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -1183,15 +1149,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	
@@ -1229,14 +1193,13 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="9" align="center">Requisitos</th>
+											<th colspan="8" align="center">Requisitos</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Tipo</td>
 												<td  align="center">Projeto </td>
-												<td  align="center">Tarefa</td>
 												<td  align="center">Nome</td>
 												<td  align="center">Data De Inicio </td>
 												<td  align="center">Data De Termino </td>
@@ -1246,15 +1209,13 @@
 							 ';
 			foreach ($aAllRequirement as $aRequirement) 
 			{
-				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['TipoRequisito_idTipoRequisito']);
-				$aTask = Task::findTask($aRequirement['Tarefa_idTarefa']);
-				$aProject = Project::findProject($aRequirement['Projeto_idProjeto']);
+				$aTypeRequirement = TypeRequirement::findTypeRequirement($aRequirement['tipoRequisito_idTipoRequisito']);
+				$aProject = Project::findProject($aRequirement['projeto_idProjeto']);
 				$sHTML.= '
 							<tr>
 								<td align="center">'.$aRequirement['idRequisito'].' </td>
 								<td align="center">'.$aTypeRequirement ['nomeTipoRequisito'].'  </td>
 								<td align="center">'.$aProject['nomeProjeto'].' </td>
-								<td align="center">'.$aTask['nomeTarefa'].' </td>
 								<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataInicioRequisito'].' </td>
 								<td align="center">'.$aRequirement['dataTerminoRequisito'].' </td>	

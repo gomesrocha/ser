@@ -22,6 +22,7 @@
 			$aAllUser 	 = User::allUser();
 			$aAllTask	 = Task::allTaskDepEdit();
 			$aAllProjectManager = Project::allProject();
+			$aAllRequirement = Requirement::allRequirement();
 		?>
      <div id="top-nav" class="navbar navbar-inverse navbar-static-top">
         <div class="container-fluid">
@@ -119,6 +120,7 @@
 							<ul>
 									<li><a href="/ser/task/createallreporttasks"><i class="glyphicon glyphicon-print"></i> Todos as Tarefas </a></li>
 									<li><a href="/ser/task/pagereporttaskprojects"><i class="glyphicon glyphicon-print"></i> Tarefas Por Projeto </a></li>
+									<li><a href="/ser/task/pagereporttaskrequirement"><i class="glyphicon glyphicon-print"></i> Tarefas Por Requisitos </a></li>
 									<li><a href="/ser/task/pagereporttaskusers"><i class="glyphicon glyphicon-print"></i> Tarefas Por Usuario </a></li>
 									<li><a href="/ser/task/pagereporttaskdatestart"> <i class="glyphicon glyphicon-print"></i> Tarefas Por Inicio </a></li>
 									<li><a href="/ser/task/pagereporttaskdatefinish"><i class="glyphicon glyphicon-print"></i> Tarefas Por Termino </a></li>
@@ -154,7 +156,7 @@
                                     <label>
                                         Nome do Projeto</label>
                                     <div class="controls">
-                                        <select id="projectId" name = "sProjectId" class="form-control">
+                                        <select id="projectId" name = "iProjectId" class="form-control">
 											
 											<?php
 												foreach($aAllProject as $oProject )
@@ -182,7 +184,7 @@
                                     <label>
                                         Nome do Responsável</label>
                                     <div class="controls">
-										<select id="userName" name = "sUserId" class="form-control">
+										<select id="userName" name = "iUserId" class="form-control">
 											
 												<?php
 												
@@ -190,6 +192,27 @@
 													{
 												?>
 												<option  <?php echo $oUser['idUsuario'] == $oTask['Usuario_idUsuario'] ? 'selected':'';?> value="<?=$oUser['idUsuario']?>"> <?=$oUser['nomeUsuario']?></option>
+								
+												<?php
+													}
+												?>
+										</select>
+                                    </div>
+                                </div>
+								
+								<div class="control-group col-md-7">
+                                    <label>
+                                        Requisito</label>
+                                    <div class="controls">
+										<select  name = "iRequirementId" autocomplete = "off" class="form-control">
+											
+												<?php
+												
+													foreach($aAllRequirement as $oRequirement )
+													{
+												?>
+												
+												<option  <?php echo $oRequirement['idRequisito'] == $oTask['requisito_idRequisito'] ? 'selected':'';?> value="<?=$oRequirement['idRequisito']?>"> <?=$oRequirement['nomeRequisito']?></option>
 								
 												<?php
 													}
@@ -249,7 +272,7 @@
 												{
 													
 											?>
-											<option  <?php echo $oTask['Tarefa_idTarefa'] == $oTaskDep['idTarefa'] ? 'selected':'';?> value="<?=$oTaskDep['idTarefa']?>"> <?=$oTaskDep['nomeTarefa']?></option>
+											<option  <?php echo $oTask['tarefa_idTarefa'] == $oTaskDep['idTarefa'] ? 'selected':'';?> value="<?=$oTaskDep['idTarefa']?>"> <?=$oTaskDep['nomeTarefa']?></option>
 											<?php										
 												}
 											?>

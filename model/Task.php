@@ -4,26 +4,33 @@
 	{
 		private $iTaskProjectId;
 		private $iTaskUserId;
+		private $iTaskRequirementId;
 		private $iTaskPend;
 		private $sTaskName;
 		private $dTaskFinishDate;
 		private $dTaskStartDate;
 		private $sTaskObs;
 		
-		function __construct($iTaskProjectId,$iTaskUserId,$dTaskStartDate,$sTaskName,$dTaskFinishDate,$sTaskObs = null,$iTaskPend = null)
+		function __construct($iTaskProjectId,$iTaskUserId,$iTaskRequirementId,$dTaskStartDate,$sTaskName,$dTaskFinishDate,$sTaskObs = null,$iTaskPend = null)
 		{
-			$this->iTaskProjectId 	= $iTaskProjectId;
-			$this->iTaskUserId 		= $iTaskUserId;
-			$this->sTaskName 		= $sTaskName;
-			$this->dTaskStartDate 	= $dTaskStartDate;
-			$this->dTaskFinishDate	= $dTaskFinishDate;
-			$this->sTaskObs 		= $sTaskObs;
-			$this->iTaskPend 		= $iTaskPend;
+			$this->iTaskProjectId 		= $iTaskProjectId;
+			$this->iTaskUserId 			= $iTaskUserId;
+			$this->sTaskName 			= $sTaskName;
+			$this->iTaskRequirementId	= $iTaskRequirementId;
+			$this->dTaskStartDate 		= $dTaskStartDate;
+			$this->dTaskFinishDate		= $dTaskFinishDate;
+			$this->sTaskObs 			= $sTaskObs;
+			$this->iTaskPend 			= $iTaskPend;
 		}
 		
 		public function getTaskProjectId()
 		{
 			return $this->iTaskProjectId;
+		}
+		
+		public function getTaskRequirementId()
+		{
+			return $this->iTaskRequirementId;
 		}
 		
 		public function getTaskUserId()
@@ -59,6 +66,11 @@
 		public function setTaskProjectId($iTaskProjectId)
 		{
 			$this->iTaskProjectId = $iTaskProjectId;
+		}
+		
+		public function setTaskRequirement($iTaskRequirementId)
+		{
+			$this->iTaskRequirementId = $iTaskRequirementId;
 		}
 		
 		public function setTaskUserId($iTaskUserId)
@@ -172,29 +184,32 @@
 				$rDatabaseHandler = new SerDatabaseHandler($aJson);
 				$rConnection = $rDatabaseHandler->getInstance();
 				$rDatabaseHandler->begin($rConnection);
-				$sQuery = "INSERT INTO tarefa(Projeto_idProjeto,Usuario_idUsuario,nomeTarefa,dataInicioTarefa,
+				$sQuery = "INSERT INTO tarefa(Projeto_idProjeto,Usuario_idUsuario,requisito_idRequisito,nomeTarefa,dataInicioTarefa,
 											  dataTerminoTarefa,obsTarefa,Tarefa_idTarefa) 
-										VALUES (?,?,?,?,?,?,?) ";
+										VALUES (?,?,?,?,?,?,?,?) ";
 						
 				if(!empty($oTask->getTaskPend()))
 				{
 					$aArrayParam = [$oTask->getTaskProjectId(),$oTask->getTaskUserId(),
-									$oTask->getTaskName(),$oTask->getTaskStartDate(),
-									$oTask->getTaskFinishDate(),$oTask->getTaskObs(),$oTask->getTaskPend()];
+									$oTask->getTaskRequirementId(),$oTask->getTaskName(),
+									$oTask->getTaskStartDate(),$oTask->getTaskFinishDate(),
+									$oTask->getTaskObs(),$oTask->getTaskPend()];
 				}
 				else
 				{
 					$aArrayParam = [$oTask->getTaskProjectId(),$oTask->getTaskUserId(),
-									$oTask->getTaskName(),$oTask->getTaskStartDate(),
-									$oTask->getTaskFinishDate(),$oTask->getTaskObs(),null];
+									$oTask->getTaskRequirementId(),$oTask->getTaskName(),
+									$oTask->getTaskStartDate(),$oTask->getTaskFinishDate(),
+									$oTask->getTaskObs(),null];
 				}
+				
 				$rDatabaseHandler->add($sQuery,$rConnection,$aArrayParam);
 				$rDatabaseHandler->commit($rConnection);
 				$rConnection = $rDatabaseHandler->close($rConnection);
 				$aUser = User::findUser($oTask->getTaskUserId());
-				$aProject = Project::findProject($oTask->getProjectId());
+				$aProject = Project::findProject($oTask->getTaskProjectId());
 				$sUserName = new Sessao();
-				self::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Tarefa do Projeto ".$aProject['nomeProjeto'],'Olá !!! Há uma nova tarefa para você vinculada ao projeto '.$aProject['nomeProjeto'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
+				User::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Tarefa do Projeto".$aProject["nomeProjeto"]."","Olá !!! Há uma nova tarefa para você vinculada ao projeto ".$aProject["nomeProjeto"].". Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
 				echo "<script> 
 							alert('Cadastro Feito Com Sucesso !!!');
 							window.location.href = '/ser/login/pageaddtask';
@@ -276,9 +291,10 @@
 				$rConnection = $rDatabaseHandler->getInstance();
 				$rDatabaseHandler->begin($rConnection);
 				$sQuery = "UPDATE tarefa SET 
-										   Projeto_idProjeto = ?,
-						       			   Usuario_idUsuario =?,
+										   projeto_idProjeto = ?,
+						       			   usuario_idUsuario =?,
 						       			   nomeTarefa = ?,
+										   requisito_idRequisito = ?,
 										   dataInicioTarefa = ?,
 										   dataTerminoTarefa = ?,
 										   obsTarefa = ?,
@@ -287,24 +303,23 @@
 				if(!empty($oTask->getTaskPend()))
 				{
 					$aArrayParam = [$oTask->getTaskProjectId(),$oTask->getTaskUserId(),
-									$oTask->getTaskName(),$oTask->getTaskStartDate(),
+									$oTask->getTaskName(),$oTask->getTaskRequirementId(),$oTask->getTaskStartDate(),
 									$oTask->getTaskFinishDate(),$oTask->getTaskObs(),$oTask->getTaskPend()];
 				}
 				else
 				{
 					$aArrayParam = [$oTask->getTaskProjectId(),$oTask->getTaskUserId(),
-									$oTask->getTaskName(),$oTask->getTaskStartDate(),
+									$oTask->getTaskName(),$oTask->getTaskRequirementId(),$oTask->getTaskStartDate(),
 									$oTask->getTaskFinishDate(),$oTask->getTaskObs(),null];
-				}
-							
+				}	
 				$aArrayCondicao = [$iId];
 				$rDatabaseHandler->update($sQuery,$rConnection,$aArrayParam,$aArrayCondicao);
 				$rDatabaseHandler->commit($rConnection);
 				$rConnection = $rDatabaseHandler->close($rConnection);
 				$aUser = User::findUser($oTask->getTaskUserId());
-				$aProject = Project::findProject($oTask->getProjectId());
+				$aProject = Project::findProject($oTask->getTaskProjectId());
 				$sUserName = new Sessao();
-				self::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Tarefa do Projeto ".$aProject['nomeProjeto'],'Olá !!! Há mudanças na tarefa para você vinculada ao projeto '.$aProject['nomeProjeto'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
+				User::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Tarefa do Projeto ".$aProject['nomeProjeto'],'Olá !!! Há mudanças na tarefa para você vinculada ao projeto '.$aProject['nomeProjeto'].'. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)');
 				echo "<script> 
 						alert('Tarefa Alterada Com Sucesso !!!');
 						window.location.href = '/ser/login/pagevisualizetask';
@@ -325,6 +340,9 @@
 				$rDatabaseHandler = new SerDatabaseHandler($aJson);
 				$rConnection = $rDatabaseHandler->getInstance();
 				$rDatabaseHandler->begin($rConnection);
+				$aTask = self::findTask($iIdTask);
+				$aUser = User::findUser($aTask["usuario_idUsuario"]);
+				$aProject = Project::findProject($aTask["projeto_idProjeto"]);
 				$sQuery = "DELETE FROM tarefa WHERE idTarefa = ? ";
 				$aArrayParam = [$iIdTask];
 				$lDeleted = $rDatabaseHandler->deleteDate($sQuery,$rConnection,$aArrayParam);
@@ -332,10 +350,8 @@
 				{
 					$rDatabaseHandler->commit($rConnection);
 					$rConnection = $rDatabaseHandler->close($rConnection);
-					$aUser = User::findUser($oTask->getTaskUserId());
-					$aProject = Project::findProject($oTask->getProjectId());
 					$sUserName = new Sessao();
-					self::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Tarefa do Projeto ".$aProject['nomeProjeto']."","Olá !!! Tarefa  ao projeto ".$aProject['nomeProjeto']." foi deletada. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
+					User::sendEmail($aUser["emailUsuario"],$sUserName->getSessao("sUserName"),"Tarefa do Projeto ".$aProject['nomeProjeto']."","Olá !!! Tarefa  ao projeto ".$aProject['nomeProjeto']." foi deletada. Atenciosamente grupo GPITIC(Grupo de Pesquisa Interdisciplinar em Tecnologia da Informação e Comunicação)");
 					echo "<script> 
 						alert('Tarefa Deletada Com Sucesso !!!');
 						window.location.href = '/ser/login/pagevisualizetask';
@@ -510,13 +526,14 @@
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="7" align="center">Tarefas</th>
+											<th colspan="8" align="center">Tarefas</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Nome da Tarefa</td>
 												<td  align="center">Projeto</td>
+												<td  align="center">Requisito</td>
 												<td  align="center">Usuario </td>												
 												<td  align="center">Tarefa Dep. </td>
 												<td  align="center">Data de Inicio </td>
@@ -524,11 +541,12 @@
 											</tr> ';
 			foreach ($aAllTask as $aTask) 
 			{
-				$aUser = User::findUser($aTask['Usuario_idUsuario']);
-				$aProject = Project::findProject($aTask['Projeto_idProjeto']);
-				if(!empty($aTask['Tarefa_idTarefa']))
+				$aUser = User::findUser($aTask['usuario_idUsuario']);
+				$aProject = Project::findProject($aTask['projeto_idProjeto']);
+				$aRequirement  = Requirement::findRequirement($aTask['requisito_idRequisito']);
+				if(!empty($aTask['tarefa_idTarefa']))
 				{
-					$aDepTask = Task::depTask($aTask['Tarefa_idTarefa']); 
+					$aDepTask = Task::depTask($aTask['tarefa_idTarefa']); 
 				}
 				else
 				{
@@ -537,6 +555,7 @@
 				$sHTML.= '
 						<tr>
 							<td align="center">'.$aTask['idTarefa'].' </td>
+							<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 							<td align="center">'.$aTask['nomeTarefa'].' </td>
 							<td align="center">'.$aProject['nomeProjeto'].' </td>
 							<td align="center">'.$aUser ['nomeUsuario'].'  </td>
@@ -556,7 +575,7 @@
 		}
 	
 		public static function createReportTaskDateStart($sTaskDateStart)
-		{		
+		{	
 			$aAllTask = self::consultStartDateTasks($sTaskDateStart);
 			$sHTML =  '<html>
 						<head>
@@ -567,20 +586,22 @@
 							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 							<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 						</head>
-							<body>
-								<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
-								<h3 align ="center">Relatorio de Tarefas Por Data De Inicio</h3>
+		
+						<body>
+						<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
+							<h3 align ="center">Relatorio De Tarefas</h3>
                            
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="7" align="center">Tarefas</th>
+											<th colspan="8" align="center">Tarefas</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Nome da Tarefa</td>
 												<td  align="center">Projeto</td>
+												<td  align="center">Requisito</td>
 												<td  align="center">Usuario </td>												
 												<td  align="center">Tarefa Dep. </td>
 												<td  align="center">Data de Inicio </td>
@@ -588,11 +609,12 @@
 											</tr> ';
 			foreach ($aAllTask as $aTask) 
 			{
-				$aUser = User::findUser($aTask['Usuario_idUsuario']);
-				$aProject = Project::findProject($aTask['Usuario_idUsuario']);
-				if(!empty($aTask['Tarefa_idTarefa']))
+				$aUser = User::findUser($aTask['usuario_idUsuario']);
+				$aProject = Project::findProject($aTask['projeto_idProjeto']);
+				$aRequirement  = Requirement::findRequirement($aTask['requisito_idRequisito']);
+				if(!empty($aTask['tarefa_idTarefa']))
 				{
-					$aDepTask = Task::depTask($aTask['Tarefa_idTarefa']);
+					$aDepTask = Task::depTask($aTask['tarefa_idTarefa']); 
 				}
 				else
 				{
@@ -601,6 +623,7 @@
 				$sHTML.= '
 						<tr>
 							<td align="center">'.$aTask['idTarefa'].' </td>
+							<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 							<td align="center">'.$aTask['nomeTarefa'].' </td>
 							<td align="center">'.$aProject['nomeProjeto'].' </td>
 							<td align="center">'.$aUser ['nomeUsuario'].'  </td>
@@ -608,12 +631,12 @@
 							<td align="center">'.$aTask['dataInicioTarefa'].' </td>
 							<td align="center">'.$aTask['dataTerminoTarefa'].' </td>	
 						</tr>
-					';
+						';
 			}
 			$sHTML.='		</table>
 						</body>
 					</html>';
-			$arquivo = "Relatorio de Tarefa Por Data de Inicio.pdf";
+			$arquivo = "Relatorio de Tarefas.pdf";
 			$mpdf = new mPDF();
 			$mpdf->WriteHTML($sHTML);	
 			$mpdf->Output($arquivo,'I');
@@ -631,20 +654,22 @@
 							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 							<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 						</head>
-							<body>
-								<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
-								<h3 align ="center">Relatorio de Tarefas Por Data De Termino</h3>
+		
+						<body>
+						<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
+							<h3 align ="center">Relatorio De Tarefas</h3>
                            
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="7" align="center">Tarefas</th>
+											<th colspan="8" align="center">Tarefas</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Nome da Tarefa</td>
 												<td  align="center">Projeto</td>
+												<td  align="center">Requisito</td>
 												<td  align="center">Usuario </td>												
 												<td  align="center">Tarefa Dep. </td>
 												<td  align="center">Data de Inicio </td>
@@ -652,11 +677,12 @@
 											</tr> ';
 			foreach ($aAllTask as $aTask) 
 			{
-				$aUser = User::findUser($aTask['Usuario_idUsuario']);
-				$aProject = Project::findProject($aTask['Usuario_idUsuario']);
-				if(!empty($aTask['Tarefa_idTarefa']))
+				$aUser = User::findUser($aTask['usuario_idUsuario']);
+				$aProject = Project::findProject($aTask['projeto_idProjeto']);
+				$aRequirement  = Requirement::findRequirement($aTask['requisito_idRequisito']);
+				if(!empty($aTask['tarefa_idTarefa']))
 				{
-					$aDepTask = Task::depTask($aTask['Tarefa_idTarefa']);
+					$aDepTask = Task::depTask($aTask['tarefa_idTarefa']); 
 				}
 				else
 				{
@@ -665,6 +691,7 @@
 				$sHTML.= '
 						<tr>
 							<td align="center">'.$aTask['idTarefa'].' </td>
+							<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 							<td align="center">'.$aTask['nomeTarefa'].' </td>
 							<td align="center">'.$aProject['nomeProjeto'].' </td>
 							<td align="center">'.$aUser ['nomeUsuario'].'  </td>
@@ -672,12 +699,12 @@
 							<td align="center">'.$aTask['dataInicioTarefa'].' </td>
 							<td align="center">'.$aTask['dataTerminoTarefa'].' </td>	
 						</tr>
-					';
+						';
 			}
 			$sHTML.='		</table>
 						</body>
 					</html>';
-			$arquivo = "Relatorio de Tarefa Por Data de Termino.pdf";
+			$arquivo = "Relatorio de Tarefas.pdf";
 			$mpdf = new mPDF();
 			$mpdf->WriteHTML($sHTML);	
 			$mpdf->Output($arquivo,'I');
@@ -695,20 +722,22 @@
 							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 							<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 						</head>
-							<body>
-								<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
-								<h3 align ="center">Relatorio de Tarefas Por Periodo</h3>
+		
+						<body>
+						<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
+							<h3 align ="center">Relatorio De Tarefas</h3>
                            
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="7" align="center">Tarefas</th>
+											<th colspan="8" align="center">Tarefas</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Nome da Tarefa</td>
 												<td  align="center">Projeto</td>
+												<td  align="center">Requisito</td>
 												<td  align="center">Usuario </td>												
 												<td  align="center">Tarefa Dep. </td>
 												<td  align="center">Data de Inicio </td>
@@ -716,11 +745,12 @@
 											</tr> ';
 			foreach ($aAllTask as $aTask) 
 			{
-				$aUser = User::findUser($aTask['Usuario_idUsuario']);
-				$aProject = Project::findProject($aTask['Usuario_idUsuario']);
-				if(!empty($aTask['Tarefa_idTarefa']))
+				$aUser = User::findUser($aTask['usuario_idUsuario']);
+				$aProject = Project::findProject($aTask['projeto_idProjeto']);
+				$aRequirement  = Requirement::findRequirement($aTask['requisito_idRequisito']);
+				if(!empty($aTask['tarefa_idTarefa']))
 				{
-					$aDepTask = Task::depTask($aTask['Tarefa_idTarefa']);
+					$aDepTask = Task::depTask($aTask['tarefa_idTarefa']); 
 				}
 				else
 				{
@@ -729,6 +759,7 @@
 				$sHTML.= '
 						<tr>
 							<td align="center">'.$aTask['idTarefa'].' </td>
+							<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 							<td align="center">'.$aTask['nomeTarefa'].' </td>
 							<td align="center">'.$aProject['nomeProjeto'].' </td>
 							<td align="center">'.$aUser ['nomeUsuario'].'  </td>
@@ -736,12 +767,12 @@
 							<td align="center">'.$aTask['dataInicioTarefa'].' </td>
 							<td align="center">'.$aTask['dataTerminoTarefa'].' </td>	
 						</tr>
-					';
+						';
 			}
 			$sHTML.='		</table>
 						</body>
 					</html>';
-			$arquivo = "Relatorio de Tarefa Por Por Periodo.pdf";
+			$arquivo = "Relatorio de Tarefas.pdf";
 			$mpdf = new mPDF();
 			$mpdf->WriteHTML($sHTML);	
 			$mpdf->Output($arquivo,'I');
@@ -759,20 +790,22 @@
 							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 							<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 						</head>
-							<body>
-								<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
-								<h3 align ="center">Relatorio de Tarefas Por Usuario</h3>
+		
+						<body>
+						<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
+							<h3 align ="center">Relatorio De Tarefas</h3>
                            
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="7" align="center">Tarefas</th>
+											<th colspan="8" align="center">Tarefas</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Nome da Tarefa</td>
 												<td  align="center">Projeto</td>
+												<td  align="center">Requisito</td>
 												<td  align="center">Usuario </td>												
 												<td  align="center">Tarefa Dep. </td>
 												<td  align="center">Data de Inicio </td>
@@ -780,11 +813,12 @@
 											</tr> ';
 			foreach ($aAllTask as $aTask) 
 			{
-				$aUser = User::findUser($aTask['Usuario_idUsuario']);
-				$aProject = Project::findProject($aTask['Usuario_idUsuario']);
-				if(!empty($aTask['Tarefa_idTarefa']))
+				$aUser = User::findUser($aTask['usuario_idUsuario']);
+				$aProject = Project::findProject($aTask['projeto_idProjeto']);
+				$aRequirement  = Requirement::findRequirement($aTask['requisito_idRequisito']);
+				if(!empty($aTask['tarefa_idTarefa']))
 				{
-					$aDepTask = Task::depTask($aTask['Tarefa_idTarefa']);
+					$aDepTask = Task::depTask($aTask['tarefa_idTarefa']); 
 				}
 				else
 				{
@@ -793,6 +827,7 @@
 				$sHTML.= '
 						<tr>
 							<td align="center">'.$aTask['idTarefa'].' </td>
+							<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 							<td align="center">'.$aTask['nomeTarefa'].' </td>
 							<td align="center">'.$aProject['nomeProjeto'].' </td>
 							<td align="center">'.$aUser ['nomeUsuario'].'  </td>
@@ -800,12 +835,12 @@
 							<td align="center">'.$aTask['dataInicioTarefa'].' </td>
 							<td align="center">'.$aTask['dataTerminoTarefa'].' </td>	
 						</tr>
-					';
+						';
 			}
 			$sHTML.='		</table>
 						</body>
 					</html>';
-			$arquivo = "Relatorio de Tarefa Por Usuario.pdf";
+			$arquivo = "Relatorio de Tarefas.pdf";
 			$mpdf = new mPDF();
 			$mpdf->WriteHTML($sHTML);	
 			$mpdf->Output($arquivo,'I');
@@ -823,20 +858,22 @@
 							<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 							<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 						</head>
-							<body>
-								<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
-								<h3 align ="center">Relatorio de Tarefas Por Projeto</h3>
+		
+						<body>
+						<h2 align ="center">SER - Sistema de Engenharia de Requisitos </h3>
+							<h3 align ="center">Relatorio De Tarefas</h3>
                            
                                     <table border="1" align="center" class="table">
 
 										<tr>
-											<th colspan="7" align="center">Tarefas</th>
+											<th colspan="8" align="center">Tarefas</th>
 										</tr>
 											
 											<tr>
 												<td  align="center">ID</td>
 												<td  align="center">Nome da Tarefa</td>
 												<td  align="center">Projeto</td>
+												<td  align="center">Requisito</td>
 												<td  align="center">Usuario </td>												
 												<td  align="center">Tarefa Dep. </td>
 												<td  align="center">Data de Inicio </td>
@@ -844,11 +881,12 @@
 											</tr> ';
 			foreach ($aAllTask as $aTask) 
 			{
-				$aUser = User::findUser($aTask['Usuario_idUsuario']);
-				$aProject = Project::findProject($aTask['Usuario_idUsuario']);
-				if(!empty($aTask['Tarefa_idTarefa']))
+				$aUser = User::findUser($aTask['usuario_idUsuario']);
+				$aProject = Project::findProject($aTask['projeto_idProjeto']);
+				$aRequirement  = Requirement::findRequirement($aTask['requisito_idRequisito']);
+				if(!empty($aTask['tarefa_idTarefa']))
 				{
-					$aDepTask = Task::depTask($aTask['Tarefa_idTarefa']);
+					$aDepTask = Task::depTask($aTask['tarefa_idTarefa']); 
 				}
 				else
 				{
@@ -857,6 +895,7 @@
 				$sHTML.= '
 						<tr>
 							<td align="center">'.$aTask['idTarefa'].' </td>
+							<td align="center">'.$aRequirement['nomeRequisito'].' </td>
 							<td align="center">'.$aTask['nomeTarefa'].' </td>
 							<td align="center">'.$aProject['nomeProjeto'].' </td>
 							<td align="center">'.$aUser ['nomeUsuario'].'  </td>
@@ -864,12 +903,12 @@
 							<td align="center">'.$aTask['dataInicioTarefa'].' </td>
 							<td align="center">'.$aTask['dataTerminoTarefa'].' </td>	
 						</tr>
-					';
+						';
 			}
 			$sHTML.='		</table>
 						</body>
 					</html>';
-			$arquivo = "Relatorio de Tarefa Por Projeto.pdf";
+			$arquivo = "Relatorio de Tarefas.pdf";
 			$mpdf = new mPDF();
 			$mpdf->WriteHTML($sHTML);	
 			$mpdf->Output($arquivo,'I');

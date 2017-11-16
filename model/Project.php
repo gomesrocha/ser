@@ -635,7 +635,7 @@ class Project
 							 ';
 							foreach ($aStatusProject as $aProject) 
 							{
-								$oManager = User::findUser($aProject['Usuario_idUsuario']);			
+								$oManager = User::findUser($aProject['usuario_idUsuario']);			
 								$sHTML.= '
 											<tr>
 												<td align="center">'.$aProject['idProjeto'].' </td>
@@ -697,7 +697,7 @@ class Project
 							 ';
 		foreach ($aStatusProject as $aProject) 
 		{
-			$oManager = User::findUser($aProject['Usuario_idUsuario']);		
+			$oManager = User::findUser($aProject['usuario_idUsuario']);		
 			$sHTML.= '
 						<tr>
 							<td align="center">'.$aProject['idProjeto'].' </td>
@@ -752,7 +752,7 @@ class Project
 											</tr> ';
 		foreach ($aAllProject as $aProject) 
 		{
-			$oManager = User::findUser($aProject['Usuario_idUsuario']);			
+			$oManager = User::findUser($aProject['usuario_idUsuario']);			
 			$sHTML.= '
 						<tr>
 							<td align="center">'.$aProject['idProjeto'].' </td>
@@ -807,7 +807,7 @@ class Project
 											</tr> ';
 		foreach ($aAllProjectDateStart as $aProject) 
 		{
-			$oManager = User::findUser($aProject['Usuario_idUsuario']);			
+			$oManager = User::findUser($aProject['usuario_idUsuario']);			
 			$sHTML.= '
 						<tr>
 							<td align="center">'.$aProject['idProjeto'].' </td>
@@ -862,7 +862,7 @@ class Project
 											</tr> ';
 		foreach ($aAllProjectDateFinish as $aProject) 
 		{
-			$oManager = User::findUser($aProject['Usuario_idUsuario']);			
+			$oManager = User::findUser($aProject['usuario_idUsuario']);			
 			$sHTML.= '
 						<tr>
 							<td align="center">'.$aProject['idprojeto'].' </td>
@@ -920,7 +920,7 @@ class Project
 											</tr> ';
 				foreach ($aAllProjectPeriod as $aProject) 
 				{
-					$oManager = User::findUser($aProject['Usuario_idUsuario']);			
+					$oManager = User::findUser($aProject['usuario_idUsuario']);			
 					$sHTML.= '
 						<tr>
 							<td align="center">'.$aProject['idProjeto'].' </td>

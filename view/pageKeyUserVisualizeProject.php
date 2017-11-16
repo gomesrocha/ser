@@ -116,7 +116,7 @@
                                     <table border="1" class="table">
 
 			<tr>
-				<th colspan="10" align="center">PROJETOS</th>
+				<th colspan="7" align="center">PROJETOS</th>
 			</tr>
 
 
