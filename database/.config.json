@@ -1,7 +1,7 @@
 
 	{
-  		"host": "mysql873.umbler.com",
-  		"usuario": "fabiodb",
-  		"senha": "(2W5DQ{lxc",
+  		"host": "seuservidor",
+  		"usuario": "SEUUSUARIOdb",
+  		"senha": "SUASENHA",
   		"banco": "midasdb"
 	}
