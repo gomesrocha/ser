@@ -16,7 +16,7 @@
                     <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar">
                     </span>
                 </button>
-                <p class="navbar-brand" >SER - Sistema De Engenharia de Requisitos</p>
+                <p class="navbar-brand" >SER - Sistema De Engenharia de Requisitos </p> 
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -74,8 +74,9 @@
                                 <div class="control-group col-md-12">
                                    
                                     <div class="controls"></br>
-                                        <p><a href ="/ser/login/pagechangepassword" style = "margin-left: 143px"> Esqueceu a Senha ? </a></p>
-										 <p><a href ="/ser/login/pageacess" style = "margin-left: 150px"> Primeiro Acesso ? </a></p>
+                                        <p><a href ="/ser/login/pagechangepassword" style = "margin-left: 143px; text-decoration:none"> Esqueceu a Senha ? </a></p>
+										 <p><a href ="/ser/login/pageacess" style = "margin-left: 150px; text-decoration:none"> Primeiro Acesso ? </a></p>
+										 <p><a href ="/ser/login/pageabout" style = "margin-left: 150px; text-decoration:none"> Sobre o Sistema </a></p>
 									</div>
 								</div>
                             <!--/panel content-->

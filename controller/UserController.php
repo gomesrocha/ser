@@ -51,6 +51,14 @@
 			}
 		}
 		
+		public function About()
+		{
+			if($this->post("btnVoltar"))
+			{
+				$this->redirect("pagelogin");
+			}
+		}
+		
 		public function addLink()
 		{
 			$iLinkProject = new Sessao("linkUser",$this->get("id"));
